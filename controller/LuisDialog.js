@@ -25,16 +25,31 @@ exports.startDialog = function (bot) {
         matches: 'WantFood'
     });
 
-    bot.dialog('DeleteFavourite', function (session, args) {
-        if (!isAttachment(session)){
-            var foodEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'food');
-
-            if(foodEntity) {
-                session.send('Delete the &s... that u do not like', foodEntity, entity);         
-            }else {
-                session.send("No food indentidied! Please try again");
-            }
+    bot.dialog('DeleteFavourite', function (session, args, next) {
+        session.dialogData.args = args || {};
+        if (!session.conversationData["username"]) {
+            builder.Prompts.text(session, "Enter a username to setup your account.");
+        } else {
+            next(); // Skip if we already have this info.
         }
+    },
+    function (session, results,next) {
+    if (!isAttachment(session)) {
+
+        session.send("You want to delete one of your favourite foods.");
+
+        // Pulls out the food entity from the session if it exists
+        var foodEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'food');
+
+        // Checks if the for entity was found
+        if (foodEntity) {
+            session.send('Deleting \'%s\'...', foodEntity.entity);
+            food.deleteFavouriteFood(session,session.conversationData['username'],foodEntity.entity); //<--- CALLL WE WANT
+        } else {
+            session.send("No food identified! Please try again");
+        }
+    }
+        
         // Insert delete logic here later
     }).triggerAction({
         matches: 'DeleteFavourite'
@@ -82,16 +97,49 @@ exports.startDialog = function (bot) {
         matches: 'GetFavouriteFood'
     });
 
-    bot.dialog('LookForFavourite', [
+    bot.dialog('LookForFavourite', function (session, args, next){
         // Insert logic here later
-    ]).triggerAction({
+        session.dialogData.args = args || {};        
+        if (!session.conversationData["username"]) {
+            builder.Prompts.text(session, "Enter a username to setup your account.");                
+        } else {
+            next(); // Skip if we already have this info.
+        }
+    },
+    function (session, results, next) {
+        if (!isAttachment(session)) {
+
+            if (results.response) {
+                session.conversationData["username"] = results.response;
+            }
+            // Pulls out the food entity from the session if it exists
+            var foodEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'food');
+
+            // Checks if the food entity was found
+            if (foodEntity) {
+                session.send('Thanks for telling me that \'%s\' is your favourite food', foodEntity.entity);
+                food.sendFavouriteFood(session, session.conversationData["username"], foodEntity.entity); // <-- LINE WE WANT
+
+            } else {
+                session.send("No food identified!!!");
+            }
+                    }
+    }).triggerAction({
         matches: 'LookForFavourite'
     });
     
 
-    bot.dialog('WelcomeIntent', [
+    bot.dialog('WelcomeIntent', function (session, args){
         // Insert logic here later
-    ]).triggerAction({
+        if(!isAttachment(session)){
+            
+                        //Pull out the food entity from the session if it exists
+                        var foodEntity = builder.EntityRecognizer.findEntity(args.intent.entities, 'food');
+            
+                        // Checks if the for entity was foud
+                        session.send("Hi")
+                    }
+    }).triggerAction({
         matches: 'WelcomeIntent'
     });
 }
@@ -100,7 +148,7 @@ exports.startDialog = function (bot) {
 function isAttachment(session) { 
     var msg = session.message.text;
     if ((session.message.attachments && session.message.attachments.length > 0) || msg.includes("http")) {
-        
+        customVision.retreiveMessage(session);
         //call custom vision here later
         return true;
     }
