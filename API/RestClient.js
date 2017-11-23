@@ -32,7 +32,7 @@ exports.deleteFavouriteFood = function deleteData(url,session, username ,favouri
 
 };
 
-exports.postFavouriteFood = function getData(url, username, favouriteFood){
+exports.postFavouriteFood = function sendData(url, username, favouriteFood){
     var options = {
         url: url,
         method: 'POST',
@@ -47,6 +47,7 @@ exports.postFavouriteFood = function getData(url, username, favouriteFood){
       };
       
       request(options, function (error, response, body) {
+          // too see everything is ok 
         if (!error && response.statusCode === 200) {
             console.log(body);
         }
@@ -54,4 +55,16 @@ exports.postFavouriteFood = function getData(url, username, favouriteFood){
             console.log(error);
         }
       });
+};
+
+
+exports.getYelpData = function getData(url,bearer,session, callback){
+
+    request.get(url,{'auth': { 'bearer': bearer}} ,function(err,res,body){
+        if(err){
+            console.log(err);
+        }else {
+            callback(body,session);
+        }
+    });
 };

@@ -6,6 +6,39 @@ exports.displayFavouriteFood = function getFavouriteFood(session, username){
     
 };
 
+exports.sendFavouriteFood = function postFavouriteFood(session, username, favouriteFood){
+    var url = 'http://2017foodbotmsa.azurewebsites.net/tables/FoodBot';
+    rest.postFavouriteFood(url, username, favouriteFood);
+};
+
+exports.deleteFavouriteFood = function deleteFavouriteFood(session,username,favouriteFood){
+    var url  = 'http://2017foodbotmsa.azurewebsites.net/tables/FoodBot';
+
+
+    rest.getFavouriteFood(url,session, username,function(message,session,username){
+     var   allFoods = JSON.parse(message);
+
+        for(var i in allFoods) {
+
+            if (allFoods[i].favouriteFood === favouriteFood && allFoods[i].username === username) {
+
+                console.log(allFoods[i]);
+
+                rest.deleteFavouriteFood(url,session,username,favouriteFood, allFoods[i].id ,handleDeletedFoodResponse)
+
+            }
+        }
+
+
+    });
+
+
+};
+
+function handleDeletedFoodResponse(body,session,username, favouriteFood) {
+        console.log("Done")
+}
+
 function handleFavouriteFoodResponse(message, session, username) {
     var favouriteFoodResponse = JSON.parse(message);
     var allFoods = [];
@@ -31,7 +64,3 @@ function handleFavouriteFoodResponse(message, session, username) {
 }
 
 
-exports.sendFavouriteFood = function postFavouriteFood(session, username, favouriteFood){
-    var url = 'http://2017foodbotmsa.azurewebsites.net/tables/FoodBot';
-    rest.postFavouriteFood(url, username, favouriteFood);
-};
