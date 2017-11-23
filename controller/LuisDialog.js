@@ -3,6 +3,7 @@ var food = require("./FavouriteFoods");
 var restaurant = require("./RestaurantCard");
 var nutrition = require('./NutritionCard');
 
+
 exports.startDialog = function (bot) {
 
     var recognizer = new builder.LuisRecognizer('https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/9f807c57-85d5-4cd1-af6a-0188add62d20?subscription-key=5d65b5a6c5b749548b818b417b32c9d6&verbose=true&timezoneOffset=0&q=');
@@ -118,6 +119,7 @@ exports.startDialog = function (bot) {
             }
         },
         function (session, results, next) {
+            
         
 
                 if (results.response) {
