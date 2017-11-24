@@ -3,7 +3,7 @@ var food = require("./FavouriteFoods");
 var restaurant = require("./RestaurantCard");
 var nutrition = require('./NutritionCard');
 var qna = require('./QnAMaker');
-var cognitive = require('/CognitiveDialog');
+var cognitive = require('./CognitiveDialog');
 
 
 exports.startDialog = function (bot) {
