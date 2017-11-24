@@ -42,24 +42,24 @@ exports.startDialog = function (bot) {
             }
         },
         function (session, results,next) {
-            if (!isAttachment(session)) {
-            if (results.response){
-                session.conversationData['username'] = results.response;
-            }
+                if (!isAttachment(session)) {
+                    if (results.response){
+                        session.conversationData['username'] = results.response;
+                    }
 
-            session.send("You want to delete one of your favourite foods.");
+                    session.send("You want to delete one of your favourite foods.");
 
-            // Pulls out the food entity from the session if it exists
-            var foodEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'food');
+                    // Pulls out the food entity from the session if it exists
+                    var foodEntity = builder.EntityRecognizer.findEntity(session.dialogData.args.intent.entities, 'food');
 
-            // Checks if the for entity was found
-            if (foodEntity) {
-                session.send('Deleting \'%s\'...', foodEntity.entity);
-                food.deleteFavouriteFood(session,session.conversationData['username'],foodEntity.entity); //<--- CALLL WE WANT
-            } else {
-                session.send("No food identified! Please try again");
-            }
-        }
+                    // Checks if the for entity was found
+                    if (foodEntity) {
+                        session.send('Deleting \'%s\'...', foodEntity.entity);
+                        food.deleteFavouriteFood(session,session.conversationData['username'],foodEntity.entity); //<--- CALLL WE WANT
+                    } else {
+                        session.send("No food identified! Please try again");
+                    }
+                }
 
     }
         // Insert delete logic here later
