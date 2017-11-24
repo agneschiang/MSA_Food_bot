@@ -89,7 +89,7 @@ exports.getNutritionData = function getData(url, session, foodName, callback){
                 'Content-Type':'application/json'
             },
             json: {
-                "question" : "hi"
+                "question" : question
             }
           };
       

@@ -171,7 +171,7 @@ exports.startDialog = function (bot) {
     ]).triggerAction({
         matches: 'QnA'
     });
-}
+
 
 // Function is called when the user inputs an attachment
 function isAttachment(session) { 
@@ -184,4 +184,6 @@ function isAttachment(session) {
     else {
         return false;
     }
+}
+
 }
