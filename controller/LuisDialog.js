@@ -2,7 +2,8 @@ var builder = require('botbuilder');
 var food = require("./FavouriteFoods");
 var restaurant = require("./RestaurantCard");
 var nutrition = require('./NutritionCard');
-var qna = require('./QnAMaker')
+var qna = require('./QnAMaker');
+var cognitive = require('/CognitiveDialog');
 
 
 exports.startDialog = function (bot) {
@@ -174,7 +175,7 @@ exports.startDialog = function (bot) {
 function isAttachment(session) { 
     var msg = session.message.text;
     if ((session.message.attachments && session.message.attachments.length > 0) || msg.includes("http")) {
-        customVision.retreiveMessage(session);
+        cognitive.retreiveMessage(session);
         //call custom vision here later
         return true;
     }
